@@ -9,7 +9,7 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = User::withCount('unread_notifications')->get();
+        $users = User::withCount('unread_notifications')->where('user_type', 'user')->get();
         return view('users', compact('users'));
     }
 
