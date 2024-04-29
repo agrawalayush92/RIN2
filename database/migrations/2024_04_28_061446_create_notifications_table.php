@@ -16,8 +16,11 @@ return new class extends Migration
             $table->string('name');
             $table->unsignedInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
+            $table->enum('notifications_type', ['marketing', 'invoices', 'system'])->default('system');
             $table->boolean('status')->default(0); // default value 1
+            $table->timestamp('expired_at');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
