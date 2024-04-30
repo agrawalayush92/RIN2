@@ -17,9 +17,38 @@
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
     <!-- endinject -->
     <link rel="shortcut icon" href="{{ asset('assets/images/favicon.png') }}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        // Function to populate form fields based on selected user
+        function populateUserData(userId) {
+            // Get the user data from the PHP variable
+            var userData = {!! json_encode($users->keyBy('id')->toArray()) !!}[userId];
+
+            // Populate form fields with user data
+            document.getElementById("email").value = userData.email;
+            document.getElementById("phone").value = userData.phone;
+            document.getElementById("notificationToggle").value = userData.notifications_switch;
+        }
+
+        document.addEventListener('DOMContentLoaded', (event) => {
+            var selectElement = document.getElementById('userSelect');
+            if (selectElement) {
+                // Populate user data for the initially selected user
+                populateUserData(selectElement.value);
+
+                // Update user data when a different user is selected
+                selectElement.addEventListener('change', function() {
+                    populateUserData(this.value);
+                });
+            } else {
+                console.log('Select element not found');
+            }
+        });
+    </script>
 </head>
 <body>
     <div id="app">
@@ -54,6 +83,7 @@
                                 </li>
                             @endif
                         @else
+                            <a href="{{route('settings')}}"><i class="fas fa-cog settings-icon" style="line-height: 3;"></i></a>
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->name }}
@@ -81,9 +111,6 @@
             @yield('content')
         </main>
     </div>
-    <!-- <script src="{{ asset('assets/vendors/base/vendor.bundle.base.js') }}"></script>
-    <script src="{{ asset('assets/js/off-canvas.js') }}"></script>
-    <script src="{{ asset('assets/js/hoverable-collapse.js') }} "></script>
-    <script src="{{ asset('assets/js/template.js') }}"></script> -->
+    
 </body>
 </html>

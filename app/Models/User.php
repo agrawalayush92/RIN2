@@ -50,4 +50,13 @@ class User extends Authenticatable
     {
         return $this->hasMany(Notifications::class)->where('status', 0)->whereNull('deleted_at');
     }
+
+    public static function _find($id, $with = [])
+    {
+        return User::with($with)
+            ->where('user_type', 'user')
+            ->whereNull('deleted_at')
+            ->where('id', $id)
+            ->first();
+    }
 }

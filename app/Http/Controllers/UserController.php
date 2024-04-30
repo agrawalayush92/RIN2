@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Notifications;
 
 class UserController extends Controller
 {
@@ -15,13 +16,13 @@ class UserController extends Controller
 
     public function impersonate(Request $request)
     {
-        $user = User::with('unread_notifications')->first();
-        return view('home', compact('user'));
+        $user = User::_find($request->userId, ['unread_notifications']);
+        return view('impersonate', compact('user'));
     }
 
     public function notifications(Request $request)
     {
-        if($request->get('destination') == 'all') {
+        if ($request->get('destination') == 'all') {
             $users = User::where('user_type', 'user')->whereNull('deleted_at')->get();
             foreach ($users as $user) {
                 $notification = new Notifications();
@@ -36,22 +37,25 @@ class UserController extends Controller
 
     public function settings(Request $request)
     {
-        $user = User::where('user_type', 'user')->whereNull('deleted_at')->where('id', $request->id)->first();
-        if($request->get('email') != $user->email)
-        {
+        $users = User::where('user_type', 'user')->get();
+        return view('settings', compact('users'));
+    }
+
+    public function saveSettings(Request $request)
+    {
+        $user = User::_find($request->id);
+        if ($request->get('email') != $user->email) {
             $user->email = $request->get('email');
         }
 
-        if($request->get('phone') != $user->phone)
-        {
+        if ($request->get('phone') != $user->phone) {
             $user->phone = $request->get('phone');
         }
 
-        if($request->get('notifications_switch') != $user->notifications_switch)
-        {
+        if ($request->get('notifications_switch') != $user->notifications_switch) {
             $user->notifications_switch = $request->get('notifications_switch');
         }
 
-        return view('settings', compact('user'));
+        return response('Settings Saved', 200);
     }
 }
