@@ -12,6 +12,7 @@ Route::get('/impersonate/{userId}', [UserController::class, 'impersonate'])->nam
 Route::patch('/notification/{id}', [NotificationController::class, 'changeStatus'])->middleware('auth');
 Route::post('/notifications', [UserController::class, 'notifications']);
 Route::get('/settings', [UserController::class, 'settings'])->name('settings')->middleware('auth');
+Route::post('/settings/{id}', [UserController::class, 'saveSettings'])->middleware('auth');
 ;
 
 Auth::routes();

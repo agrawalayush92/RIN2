@@ -52,9 +52,10 @@ class UserController extends Controller
             $user->phone = $request->get('phone');
         }
 
-        if ($request->get('notifications_switch') != $user->notifications_switch) {
-            $user->notifications_switch = $request->get('notifications_switch');
+        if ($request->get('notification') != $user->notifications_switch) {
+            $user->notifications_switch = $request->get('notification');
         }
+        $user->save();
 
         return response('Settings Saved', 200);
     }
