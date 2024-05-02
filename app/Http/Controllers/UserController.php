@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Notifications;
+use Validator;
+use Propaganistas\LaravelPhone\Rules\Phone;
 
 class UserController extends Controller
 {
@@ -43,20 +45,34 @@ class UserController extends Controller
 
     public function saveSettings(Request $request)
     {
-        $user = User::_find($request->id);
-        if ($request->get('email') != $user->email) {
-            $user->email = $request->get('email');
-        }
+        try {
+            if (!empty($request->get('phone'))) {
+                $validator = Validator::make($request->all(), [
+                    'phone' => 'sometimes|phone:mobile'
+                ]);
 
-        if ($request->get('phone') != $user->phone) {
-            $user->phone = $request->get('phone');
-        }
+                if ($validator->fails()) {
+                    throw new \Exception('Validation failed: ' . $validator->errors());
+                }
+            }
 
-        if ($request->get('notification') != $user->notifications_switch) {
-            $user->notifications_switch = $request->get('notification');
-        }
-        $user->save();
+            $user = User::_find($request->id);
+            if ($request->get('email') != $user->email) {
+                $user->email = $request->get('email');
+            }
 
-        return response('Settings Saved', 200);
+            if ($request->get('phone') != $user->phone) {
+                $user->phone = $request->get('phone');
+            }
+
+            if ($request->get('notification') != $user->notifications_switch) {
+                $user->notifications_switch = $request->get('notification');
+            }
+            $user->save();
+
+            return response('Settings Saved', 200);
+        } catch (\Exception $e) {
+            return response($e->getMessage(), 500);
+        }
     }
 }
