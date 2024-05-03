@@ -14,7 +14,9 @@
                         </div>
                     @endif
 
-                    <a href="{{ route('users') }}" class="button">Check users List</a>
+                    <a href="{{ route('users') }}" class="button">Check users List</a> <br /> <br />
+                    <a href="{{ route('getNotifications') }}" class="button">Check notifications List</a> <br /> <br />
+                    <a href="{{ route('postNotifications') }}" class="button">Post New Notifications</a>
                 </div>
             </div>
         </div>

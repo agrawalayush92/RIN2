@@ -59,4 +59,12 @@ class User extends Authenticatable
             ->where('id', $id)
             ->first();
     }
+
+    public static function _findAll($with = [])
+    {
+        return User::with($with)
+            ->where('user_type', 'user')
+            ->whereNull('deleted_at')
+            ->get();
+    }
 }

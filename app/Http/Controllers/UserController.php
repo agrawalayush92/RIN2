@@ -22,21 +22,6 @@ class UserController extends Controller
         return view('impersonate', compact('user'));
     }
 
-    public function notifications(Request $request)
-    {
-        if ($request->get('destination') == 'all') {
-            $users = User::where('user_type', 'user')->whereNull('deleted_at')->get();
-            foreach ($users as $user) {
-                $notification = new Notifications();
-                $notification->name = $request->get('name');
-                $notification->expired_at = $request->get('expired_at');
-                $notification->notifications_type = $request->get('notifications_type');
-                $notification->user_id = $user->id;
-                $notification->save();
-            }
-        }
-    }
-
     public function settings(Request $request)
     {
         $users = User::where('user_type', 'user')->get();
