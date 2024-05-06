@@ -21,5 +21,10 @@ class SeedUsers extends Seeder
                 'password' => Hash::make('notifTest') // You can change 'password' to any default password you want
             ]);
         }
+        User::create([
+            'name' => 'Admin',
+            'email' => 'admin@example.com',
+            'password' => Hash::make('testing123') // You can change 'password' to any default password you want
+        ]);
     }
 }
